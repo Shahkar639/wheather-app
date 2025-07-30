@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wheather app</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.4.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+      * {
+        margin: 0%;
+        padding: 0%;
+      }
+
+      .main {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "poppins", sans-serif;
+      }
+
+      .container {
+        width: 34%;
+        height: 95%;
+        border-radius: 5px;
+        background: linear-gradient(135deg, #00feba, #5b548a);
+      }
+
+      .container h1 {
+        font-size: 32px;
+        padding-top: 10px;
+        font-weight: 600;
+        text-align: center;
+        color: #fafafa;
+      }
+
+      .line {
+        width: 100%;
+        height: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .line1 {
+        width: 30%;
+        height: 3px;
+        background-color: #fff;
+      }
+
+      .inp {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 30px 0px;
+        gap: 10px;
+      }
+
+      .inp input {
+        width: 50%;
+        height: 36px;
+        border-radius: 30px;
+        border: none;
+        outline: none;
+        padding-left: 20px;
+        font-family: "Poppins", sans-serif;
+      }
+
+      .inp button {
+        border: none !important;
+        padding: 9px 11px;
+        border-radius: 50%;
+        font-size: 16px;
+        background-color: #fff !important;
+        cursor: pointer;
+      }
+      #weather-data {
+        color: aliceblue;
+      }
+      .icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+      }
+
+      #w-icon {
+        width: 70px;
+      }
+      #par {
+        text-align: end;
+        padding-right: 70px;
+        font-size: 14px;
+      }
+      #loca {
+        margin-top: 30px;
+        margin-left: 20px;
+      }
+      #fh {
+        margin-top: 8px;
+        margin-left: 20px;
+      }
+      #fl {
+        margin-top: 8px;
+        margin-left: 20px;
+      }
+      #hum {
+        margin-top: 8px;
+        margin-left: 20px;
+      }
+      #visi {
+        margin-top: 8px;
+        margin-left: 20px;
+      }
+      #ws {
+        margin-top: 8px;
+        margin-left: 20px;
+      }
+      @media screen and (max-width: 900px) {
+        .container {
+          width: 80%;
+          height: 90%;
+        }
+      }
+      @media screen and (max-width: 380px) {
+        .container {
+          width: 95%;
+          height: 90%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main">
+      <div class="container">
+        <h1>WEATHER APP</h1>
+        <div class="line">
+          <div class="line1"></div>
+        </div>
+        <div class="inp">
+          <input type="text" id="city" placeholder="Enter City Name" />
+          <button onclick="getWeather()"><i class="ri-search-line"></i></button>
+        </div>
+        <div id="weather-data">
+          <div class="icon">
+            <img id="w-icon" src="" alt="" />
+          </div>
+          <h1 id="temp"></h1>
+          <h2 id="par"></h2>
+          <div id="loca"></div>
+          <div id="fh"></div>
+          <div id="fl"></div>
+          <div id="hum"></div>
+          <div id="visi"></div>
+          <div id="ws"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function getWeather() {
+        let maincity = document.querySelector("#city").value;
+        axios
+          .get(
+            "https://api.weatherapi.com/v1/current.json?key=bc95a555c96041ed99970949220107&q=" +
+              maincity
+          )
+          .then(function (response) {
+            const data = response.data;
+            console.log(data);
+            document.querySelector(
+              "#w-icon"
+            ).src = `https:${data.current.condition.icon}`;
+            let temp = data.current.temp_c;
+            document.querySelector("#temp").innerText = `${temp}°C`;
+            let par = data.current.condition.text;
+            document.querySelector("#par").innerText = `(${par})`;
+            let city = data.location.name;
+            let region = data.location.region;
+            let country = data.location.country;
+            let loca = `Location: ${city} , ${region} , ${country}`;
+            document.querySelector("#loca").innerText = loca;
+            let fh = data.current.temp_f;
+            document.querySelector(
+              "#fh"
+            ).innerText = `Fahrenheit:            ${fh} °F`;
+            let fl = data.current.feelslike_c;
+            document.querySelector(
+              "#fl"
+            ).innerText = `Feelslike:            ${fl} °C`;
+            let hum = data.current.humidity;
+            document.querySelector(
+              "#hum"
+            ).innerText = `Humidity:            ${hum}%`;
+            let visi = data.current.vis_km;
+            document.querySelector(
+              "#visi"
+            ).innerText = `Visibility:            ${visi}km`;
+            let ws = data.current.wind_kph;
+            document.querySelector(
+              "#ws"
+            ).innerText = `Wind Speed:            ${ws}kp/h`;
+          })
+          .catch(function (error) {
+            console.error("Error fetching weather data:", error);
+          });
+      }
+    </script>
+  </body>
+</html>
